@@ -45,8 +45,7 @@ class EmailSender
   end
 
   def send_with_mailgun
-    RestClient.post "https://api:#{ENV['MAILGUN_API_KEY']}"\
-    "@api.mailgun.net/v3/sandbox5ce6b250d3cb4c30842193a67a4139d3.mailgun.org/messages",
+    RestClient.post "https://api:#{ENV['MG_API_KEY']}@#{ENV['MG_API_BASE_URL']}/messages",
     from: "#{@params['from_name']} <#{@params['from']}>",
     to: "#{@params['to_name']} <#{@params['to']}>",
     subject: "#{@params['subject']}",
