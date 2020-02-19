@@ -33,7 +33,7 @@ and then paste the following code, using your credentials
 EMAIL_SERVICE: 'SENDGRID'
 # EMAIL_SERVICE: 'MAILGUN'
 MG_API_KEY: 'your mailgin api key'
-MG_API_BASE_URL: 'your mailgun base url'
+MG_DOMAIN: 'your mailgun base url'
 SG_API_KEY: 'your sendgrid api key'
 
 ```
@@ -44,12 +44,13 @@ or
 # EMAIL_SERVICE: 'SENDGRID'
 EMAIL_SERVICE: 'MAILGUN'
 MG_API_KEY: 'your mailgin api key'
-MG_API_BASE_URL: 'your mailgun base url'
+MG_DOMAIN: 'your mailgun base url'
 SG_API_KEY: 'your sendgrid api key'
 
 ```
 
 depending wich service you want to use
+Note: if you select mailgun and you have a free plan, you have to add and verified your recipient email addres from Mailgun Dashboard before try
 
 
 * production
