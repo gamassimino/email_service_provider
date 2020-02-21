@@ -1,61 +1,19 @@
 class EmailSender
-  # Requirements for make POST to different email service provider
-  require 'rest-client'
-  require 'sendgrid-ruby'
-  include SendGrid
+  require 'json'
 
   # Initialize all variables necesary for work then when call send method
   def initialize(params)
     @params = params
-    @service = ENV['EMAIL_SERVICE']
+    @service = ENV['EMAIL_SERVICE'].constantize.new(@params)
     @errors = []
   end
 
   # Deliver responsability of send to the correct email service provider
   def send
     if valid_input?
-      @service == 'SENDGRID' ? send_with_sendgrid : send_with_mailgun
+      @service.send
+      @errors = @service.errors if @service.errors.present?
     end
-  end
-
-  # Send POST to Sendgrid API with JSON data comes from /api/v1/email
-  def send_with_sendgrid
-    data = JSON.parse(%Q({
-      "personalizations": [
-        {
-          "to": [
-            {
-              "name": "#{@params["to_name"]}",
-              "email": "#{@params["to"]}"
-            }
-          ],
-          "subject": "#{@params["subject"]}"
-        }
-      ],
-      "from": {
-        "name": "#{@params["from_name"]}",
-        "email": "#{@params["from"]}"
-      },
-      "content": [
-        {
-          "type": "text/html",
-          "value": "#{@params["body"]}"
-        }
-      ]
-    }))
-
-    sendgrid = SendGrid::API.new(api_key: ENV['SG_API_KEY'])
-    response = sendgrid.client.mail._("send").post(request_body: data)
-  end
-
-  # Send POST to MailgGun API with JSON data comes from /api/v1/email
-  def send_with_mailgun
-    RestClient.post "https://api:#{ENV['MG_API_KEY']}"\
-    "@api.mailgun.net/v3/#{ENV['MG_DOMAIN']}/messages",
-    from: "#{@params['from_name']} <#{@params['from']}>",
-    to: "#{@params['to_name']}, #{@params['to']}",
-    subject: "#{@params['subject']}",
-    html: "#{@params['body']}"
   end
 
   # Get errors array from outside this service
@@ -71,8 +29,14 @@ class EmailSender
     @params.permit(:to, :to_name, :from, :from_name, :subject, :body)
   end
 
+  # Regex to check if email is valid
+  def valid_email?(email)
+    email =~ /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
+  end
+
   # Validations
   # all fields are required
+  # to & from inputs shoul be valid emails
   # any input should be blank
   def valid_input?
     size = 1
@@ -81,6 +45,8 @@ class EmailSender
       size += 1
     end
     @errors << 'to, to_name, from, from_name, subject, body params are required' if size == 6
+    @errors << 'to is not a valid email' unless valid_email?(permited_params['to'])
+    @errors << 'from is not a valid email' unless valid_email?(permited_params['from'])
 
     return @errors.blank?
   end

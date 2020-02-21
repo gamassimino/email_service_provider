@@ -1,5 +1,4 @@
 class Api::V1::EmailsController < ApplicationController
-
   # POST /api/v1/email
   #
   # Initialize sender service and send email with correct service provider
