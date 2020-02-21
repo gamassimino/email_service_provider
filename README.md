@@ -30,8 +30,8 @@ $ nano config/local_env.yml
 and then paste the following code, using your credentials
 
 ```yml
-EMAIL_SERVICE: 'SENDGRID'
-# EMAIL_SERVICE: 'MAILGUN'
+EMAIL_SERVICE: 'SendgridSender'
+# EMAIL_SERVICE: 'MailgunSender'
 MG_API_KEY: 'your mailgin api key'
 MG_DOMAIN: 'your mailgun base url'
 SG_API_KEY: 'your sendgrid api key'
@@ -41,8 +41,8 @@ SG_API_KEY: 'your sendgrid api key'
 or
 
 ```yml
-# EMAIL_SERVICE: 'SENDGRID'
-EMAIL_SERVICE: 'MAILGUN'
+# EMAIL_SERVICE: 'SendgridSender'
+EMAIL_SERVICE: 'MailgunSender'
 MG_API_KEY: 'your mailgin api key'
 MG_DOMAIN: 'your mailgun base url'
 SG_API_KEY: 'your sendgrid api key'
